@@ -11,10 +11,14 @@ import (
 )
 
 func main() {
-	_, err := config.InitializeDB()
+	db, initialized, err := config.InitializeDB()
 	if err != nil {
-		log.Println("Driver creation failed", err.Error())
+		log.Fatalln("Sql Error", err.Error())
+	} else if !initialized {
+		log.Fatalln("Db not initialized")
 	}
+	defer db.Close()
+
 	e := echo.New()
 
 	// Middleware

@@ -1,0 +1,2 @@
+/* vim: set ft=sql: */
+DROP TABLE IF NOT EXISTS "catalog_item";
