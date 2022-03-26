@@ -1,6 +1,6 @@
 /* vim: set ft=sql: */
 CREATE TABLE IF NOT EXISTS "catalog_item" (
-    "id" integer PRIMARY KEY,
+    "id" integer PRIMARY KEY AUTOINCREMENT,
     "title" varchar(4096) NOT NULL,
     "description" varchar NOT NULL,
     "url" varchar(4096) NOT NULL,

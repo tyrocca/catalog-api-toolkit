@@ -22,6 +22,8 @@ func InitializeDB() (*sql.DB, bool, error) {
 	_, select_error := db.Query("SELECT 1 FROM catalog_item LIMIT 1")
 	if select_error != nil {
 		log.Println("DB not migrated", select_error.Error())
+	} else {
+		initialized = true
 	}
 
 	return db, initialized, err

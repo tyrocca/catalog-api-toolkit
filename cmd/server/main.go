@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/tyrocca/catalog-api-toolkit/config"
+	"github.com/tyrocca/catalog-api-toolkit/internal/controllers"
 )
 
 func main() {
@@ -26,8 +27,16 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	// var catalogItemController
+
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+	controller := controllers.CreateControllers(db)
+
+	// Catalog item operations
+	e.GET("/catalog-items", controller.CatalogItemController.GetAll)
+	e.POST("/catalog-items", controller.CatalogItemController.CreateNew)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }

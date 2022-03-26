@@ -1,10 +1,11 @@
 package models
 
 import (
+	"database/sql"
 	"log"
 	"time"
 
-	"github.com/tyrocca/catalog-api-toolkit/config"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type CatalogItem struct {
@@ -28,12 +29,12 @@ type CatalogItemCreateParams struct {
 	PublishedAt       time.Time `json:"published_at"`
 }
 
-func (catalogItem *CatalogItem) Create(data CatalogItemCreateParams) (*CatalogItem, error) {
+func (catalogItem *CatalogItem) Create(db *sql.DB, data CatalogItemCreateParams) (*CatalogItem, error) {
 	var now = time.Now().UTC()
 	var created_at = now
 	var updated_at = now
 	var published_at = now
-	statement, _ := config.DB.Prepare("INSERT INTO catalog_item (title, description, url, image_full_url, image_thumbnail_url, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+	statement, _ := db.Prepare("INSERT INTO catalog_item (title, description, url, image_full_url, image_thumbnail_url, published_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
 	result, err := statement.Exec(
 		data.Title,
 		data.Description,
@@ -61,8 +62,8 @@ func (catalogItem *CatalogItem) Create(data CatalogItemCreateParams) (*CatalogIt
 	log.Println("Unable to create note", err.Error())
 	return catalogItem, err
 }
-func (note *CatalogItem) GetAll() ([]CatalogItem, error) {
-	rows, err := config.DB.Query("SELECT * FROM catalog_item")
+func (note *CatalogItem) GetAll(db *sql.DB) ([]CatalogItem, error) {
+	rows, err := db.Query("SELECT * FROM catalog_item")
 	allCatalogItems := []CatalogItem{}
 	if err == nil {
 		for rows.Next() {
