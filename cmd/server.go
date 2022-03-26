@@ -1,13 +1,20 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/tyrocca/catalog-api-toolkit/config"
 )
 
 func main() {
+	_, err := config.InitializeDB()
+	if err != nil {
+		log.Println("Driver creation failed", err.Error())
+	}
 	e := echo.New()
 
 	// Middleware
