@@ -16,5 +16,4 @@ func CreateControllers(db *sql.DB) *ControllerRegistery {
 	return &ControllerRegistery{
 		CatalogItemController: GetCatalogItemController(db),
 	}
-
 }
