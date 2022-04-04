@@ -2,11 +2,11 @@
 // source: catalog/catalog.proto
 
 /*
-Package catalog_api_toolkit is a reverse proxy.
+Package catalog is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package catalog_api_toolkit
+package catalog
 
 import (
 	"context"

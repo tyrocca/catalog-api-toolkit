@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/tyrocca/catalog-api-toolkit";
+option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog";
 
 import "google/api/annotations.proto";
 import "validate/validate.proto";
