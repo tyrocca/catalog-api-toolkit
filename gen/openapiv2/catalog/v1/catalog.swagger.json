@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "catalog/catalog.proto",
+    "title": "catalog/v1/catalog.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "Greeter"
+      "name": "CatalogService"
     }
   ],
   "consumes": [
@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/sayHello/{name}": {
-      "get": {
-        "operationId": "Greeter_SayHello",
+    "/v1/companies": {
+      "post": {
+        "operationId": "CatalogService_CreateCompany",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/catalogHelloReply"
+              "$ref": "#/definitions/v1Company"
             }
           },
           "default": {
@@ -35,33 +35,21 @@
         },
         "parameters": [
           {
-            "name": "name",
-            "in": "path",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "lastName",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/v1Company"
+            }
           }
         ],
         "tags": [
-          "Greeter"
+          "CatalogService"
         ]
       }
     }
   },
   "definitions": {
-    "catalogHelloReply": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        }
-      }
-    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -88,6 +76,40 @@
           }
         }
       }
+    },
+    "v1Company": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "required": [
+            "name"
+          ]
+        },
+        "uid": {
+          "type": "string",
+          "required": [
+            "uid"
+          ]
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "createTime": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "updateTime": {
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        }
+      },
+      "required": [
+        "name",
+        "uid"
+      ]
     }
   }
 }
