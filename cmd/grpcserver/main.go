@@ -34,6 +34,12 @@ func (s *CatalogServicerImpl) CreateCompany(ctx context.Context, request *gen.Cr
 	}, nil
 }
 
+func (s *CatalogServicerImpl) GetCompany(ctx context.Context, request *gen.GetCompanyRequest) (*gen.Company, error) {
+	if err := request.Validate; err != nil {
+		return nil, err
+	}
+}
+
 func main() {
 	// create new gRPC server
 	server := grpc.NewServer()
