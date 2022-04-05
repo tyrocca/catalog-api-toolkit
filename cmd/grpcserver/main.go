@@ -2,13 +2,14 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
+	"time"
 
 	// importing generated stubs
-	gen "github.com/tyrocca/catalog-api-toolkit/gen/go/catalog/v1"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
+	gen "github.com/tyrocca/catalog-api-toolkit/gen/go/catalog/v1"
 	"google.golang.org/grpc"
 )
 
@@ -23,8 +24,13 @@ func (s *CatalogServicerImpl) CreateCompany(ctx context.Context, request *gen.Cr
 	if err := request.Validate(); err != nil {
 		return nil, err
 	}
+
 	return &gen.Company{
-		Message: fmt.Sprintf("hello %s %s", request.Name, request.LastName),
+		Name:        request.Company.Name,
+		Uid:         "someid",
+		DisplayName: request.Company.DisplayName,
+		CreateTime:  timestamppb.New(time.Now().UTC()),
+		UpdateTime:  timestamppb.New(time.Now().UTC()),
 	}, nil
 }
 
