@@ -43,7 +43,9 @@ message Company {
         (google.api.field_behavior) = REQUIRED,
         (google.api.field_behavior) = IMMUTABLE
     ];
-    string display_name = 3;
+    string display_name = 3 [
+        (validate.rules).string = {min_bytes: 1, max_bytes: 256, }
+    ];
     google.protobuf.Timestamp create_time = 4 [
         (google.api.field_behavior) = IMMUTABLE,
         (google.api.field_behavior) = OUTPUT_ONLY
