@@ -13,13 +13,13 @@ import (
 )
 
 // GreeterServerImpl will implement the service defined in protocol buffer definitions
-type CatalogServicer struct {
+type CatalogServicerImpl struct {
 	gen.UnimplementedCatalogServiceServer
 }
 
 // SayHello is the implementation of RPC call defined in protocol definitions.
 // This will take HelloRequest message and return HelloReply
-func (s *CatalogServicer) CreateCompany(ctx context.Context, request *gen.CreateCompanyRequest) (*gen.Company, error) {
+func (s *CatalogServicerImpl) CreateCompany(ctx context.Context, request *gen.CreateCompanyRequest) (*gen.Company, error) {
 	if err := request.Validate(); err != nil {
 		return nil, err
 	}
@@ -32,7 +32,7 @@ func main() {
 	// create new gRPC server
 	server := grpc.NewServer()
 	// register the GreeterServerImpl on the gRPC server
-	gen.RegisterGreeterServer(server, &GreeterServerImpl{})
+	gen.RegisterCatalogServiceServer(server, &GreeterServerImpl{})
 	// start listening on port :8080 for a tcp connection
 	if l, err := net.Listen("tcp", ":8080"); err != nil {
 		log.Fatal("error in listening on port :8080", err)
