@@ -4,6 +4,7 @@ option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
 import "google/api/client.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
@@ -37,18 +38,27 @@ message CreateCompanyRequest {
     Company company = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
-/* message ListCompanyRequest { */
-/*     string parent = 1; */
-/*     int32 page_size = 2; */
-/*     string page_token = 3; */
-/*     string filter = 4; */
-/*     string order_by = 5; */
-/* } */
+message GetCompanyRequest {
+    string name = 1 [
+        (google.api.field_behavior) = REQUIRED
+        // not sure if this is okay: https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto
+        // This: https://google.aip.dev/123
+        // TODO (tyrocca 2022-04-04): I think the goal would be to have
+        // a repo of all these types..?
+    ];
+}
 
-/* message ListCompanyResponse { */
-/*     repeated Company companies = 1; */
-/*     string next_page_token = 2; */
-/* } */
+message ListCompaniesRequest {
+    int32 page_size = 2;
+    string page_token = 3;
+    string filter = 4;
+    string order_by = 5;
+}
+
+message ListCompaniesResponse {
+    repeated Company companies = 1;
+    string next_page_token = 2;
+}
 
 
 /* // Catalog Stuff */
@@ -104,5 +114,18 @@ service CatalogService {
             body: "company"
         };
         option (google.api.method_signature) = "company";
+    }
+    rpc GetCompany(GetCompanyRequest) returns (Company) {
+        option (google.api.http) = {
+            get: "/v1/companies/*"
+        };
+        option (google.api.method_signature) = "name";
+    }
+    rpc ListCompanies(ListCompaniesRequest) returns (ListCompaniesResponse) {
+        option (google.api.http) = {
+            get: "/v1/companies"
+        };
+        // no type for these since top level
+        option (google.api.method_signature) = "";
     }
 }

@@ -19,6 +19,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogServiceClient interface {
 	CreateCompany(ctx context.Context, in *CreateCompanyRequest, opts ...grpc.CallOption) (*Company, error)
+	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error)
+	ListCompanies(ctx context.Context, in *ListCompaniesRequest, opts ...grpc.CallOption) (*ListCompaniesResponse, error)
 }
 
 type catalogServiceClient struct {
@@ -38,11 +40,31 @@ func (c *catalogServiceClient) CreateCompany(ctx context.Context, in *CreateComp
 	return out, nil
 }
 
+func (c *catalogServiceClient) GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error) {
+	out := new(Company)
+	err := c.cc.Invoke(ctx, "/catalog.v1.CatalogService/GetCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) ListCompanies(ctx context.Context, in *ListCompaniesRequest, opts ...grpc.CallOption) (*ListCompaniesResponse, error) {
+	out := new(ListCompaniesResponse)
+	err := c.cc.Invoke(ctx, "/catalog.v1.CatalogService/ListCompanies", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CatalogServiceServer is the server API for CatalogService service.
 // All implementations must embed UnimplementedCatalogServiceServer
 // for forward compatibility
 type CatalogServiceServer interface {
 	CreateCompany(context.Context, *CreateCompanyRequest) (*Company, error)
+	GetCompany(context.Context, *GetCompanyRequest) (*Company, error)
+	ListCompanies(context.Context, *ListCompaniesRequest) (*ListCompaniesResponse, error)
 	mustEmbedUnimplementedCatalogServiceServer()
 }
 
@@ -52,6 +74,12 @@ type UnimplementedCatalogServiceServer struct {
 
 func (UnimplementedCatalogServiceServer) CreateCompany(context.Context, *CreateCompanyRequest) (*Company, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCompany not implemented")
+}
+func (UnimplementedCatalogServiceServer) GetCompany(context.Context, *GetCompanyRequest) (*Company, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
+}
+func (UnimplementedCatalogServiceServer) ListCompanies(context.Context, *ListCompaniesRequest) (*ListCompaniesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCompanies not implemented")
 }
 func (UnimplementedCatalogServiceServer) mustEmbedUnimplementedCatalogServiceServer() {}
 
@@ -84,6 +112,42 @@ func _CatalogService_CreateCompany_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CatalogService_GetCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCompanyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).GetCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.v1.CatalogService/GetCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).GetCompany(ctx, req.(*GetCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_ListCompanies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCompaniesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).ListCompanies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.v1.CatalogService/ListCompanies",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).ListCompanies(ctx, req.(*ListCompaniesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CatalogService_ServiceDesc is the grpc.ServiceDesc for CatalogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +158,14 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateCompany",
 			Handler:    _CatalogService_CreateCompany_Handler,
+		},
+		{
+			MethodName: "GetCompany",
+			Handler:    _CatalogService_GetCompany_Handler,
+		},
+		{
+			MethodName: "ListCompanies",
+			Handler:    _CatalogService_ListCompanies_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
