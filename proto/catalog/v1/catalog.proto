@@ -11,15 +11,6 @@ import "validate/validate.proto";
 
 package catalog.v1;
 
-message HelloRequest {
-    string name = 1 [(validate.rules).string = {min_bytes:8, max_bytes: 256,}];
-    string last_name =2;
-}
-
-/* message HelloReply { */
-/*     string message = 1; */
-/* } */
-
 message Company {
     string name = 1 [
       (google.api.field_behavior) = REQUIRED,
