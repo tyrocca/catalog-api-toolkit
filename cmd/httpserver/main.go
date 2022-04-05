@@ -73,6 +73,8 @@ func main() {
 		// we could update the gateway proto to match for /api/v1 but
 		// it shouldn't care where it's mounted to, hence we just rewrite the path here
 		r.URL.Path = strings.Replace(r.URL.Path, "/api", "", -1)
+		log.Println("Here")
+		log.Println(r.URL.Path)
 		mux.ServeHTTP(w, r)
 	})
 

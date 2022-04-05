@@ -35,9 +35,18 @@ func (s *CatalogServicerImpl) CreateCompany(ctx context.Context, request *gen.Cr
 }
 
 func (s *CatalogServicerImpl) GetCompany(ctx context.Context, request *gen.GetCompanyRequest) (*gen.Company, error) {
-	if err := request.Validate; err != nil {
+	if err := request.Validate(); err != nil {
 		return nil, err
 	}
+	log.Println(request)
+	log.Println("oh shit")
+	return &gen.Company{
+		Name:        request.Name,
+		Uid:         "someid",
+		DisplayName: "Oh this is a name",
+		CreateTime:  timestamppb.Now(),
+		UpdateTime:  timestamppb.Now(),
+	}, nil
 }
 
 func main() {

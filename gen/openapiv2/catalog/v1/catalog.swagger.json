@@ -95,7 +95,7 @@
         ]
       }
     },
-    "/v1/companies/*": {
+    "/v1/companies/{name}": {
       "get": {
         "operationId": "CatalogService_GetCompany",
         "responses": {
@@ -115,7 +115,7 @@
         "parameters": [
           {
             "name": "name",
-            "in": "query",
+            "in": "path",
             "required": true,
             "type": "string"
           }
