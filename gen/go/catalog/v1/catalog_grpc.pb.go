@@ -21,6 +21,7 @@ type CatalogServiceClient interface {
 	CreateCompany(ctx context.Context, in *CreateCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 	ListCompanies(ctx context.Context, in *ListCompaniesRequest, opts ...grpc.CallOption) (*ListCompaniesResponse, error)
+	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 }
 
 type catalogServiceClient struct {
@@ -58,6 +59,15 @@ func (c *catalogServiceClient) ListCompanies(ctx context.Context, in *ListCompan
 	return out, nil
 }
 
+func (c *catalogServiceClient) UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*Company, error) {
+	out := new(Company)
+	err := c.cc.Invoke(ctx, "/catalog.v1.CatalogService/UpdateCompany", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CatalogServiceServer is the server API for CatalogService service.
 // All implementations must embed UnimplementedCatalogServiceServer
 // for forward compatibility
@@ -65,6 +75,7 @@ type CatalogServiceServer interface {
 	CreateCompany(context.Context, *CreateCompanyRequest) (*Company, error)
 	GetCompany(context.Context, *GetCompanyRequest) (*Company, error)
 	ListCompanies(context.Context, *ListCompaniesRequest) (*ListCompaniesResponse, error)
+	UpdateCompany(context.Context, *UpdateCompanyRequest) (*Company, error)
 	mustEmbedUnimplementedCatalogServiceServer()
 }
 
@@ -80,6 +91,9 @@ func (UnimplementedCatalogServiceServer) GetCompany(context.Context, *GetCompany
 }
 func (UnimplementedCatalogServiceServer) ListCompanies(context.Context, *ListCompaniesRequest) (*ListCompaniesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCompanies not implemented")
+}
+func (UnimplementedCatalogServiceServer) UpdateCompany(context.Context, *UpdateCompanyRequest) (*Company, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCompany not implemented")
 }
 func (UnimplementedCatalogServiceServer) mustEmbedUnimplementedCatalogServiceServer() {}
 
@@ -148,6 +162,24 @@ func _CatalogService_ListCompanies_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CatalogService_UpdateCompany_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCompanyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).UpdateCompany(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/catalog.v1.CatalogService/UpdateCompany",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).UpdateCompany(ctx, req.(*UpdateCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CatalogService_ServiceDesc is the grpc.ServiceDesc for CatalogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,6 +198,10 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCompanies",
 			Handler:    _CatalogService_ListCompanies_Handler,
+		},
+		{
+			MethodName: "UpdateCompany",
+			Handler:    _CatalogService_UpdateCompany_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

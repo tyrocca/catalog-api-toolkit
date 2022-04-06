@@ -41,8 +41,18 @@ func main() {
 		runtime.WithMetadata(func(ctx context.Context, request *http.Request) metadata.MD {
 			header := request.Header.Get("Authorization")
 			// send all the headers received from the client
-			md := metadata.Pairs("auth", header)
-			return md
+			md := make(map[string]string)
+			md["auth"] = header
+			md["x-request-url-path"] = request.URL.Path
+
+			// From https://grpc-ecosystem.github.io/grpc-gateway/docs/operations/annotated_context/
+			if method, ok := runtime.RPCMethod(ctx); ok {
+				md["method"] = method
+			}
+			if pattern, ok := runtime.HTTPPathPattern(ctx); ok {
+				md["pattern"] = pattern // /v1/example/login
+			}
+			return metadata.New(md)
 		}),
 		runtime.WithErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
 			//creating a new HTTTPStatusError with a custom status, and passing error
@@ -73,8 +83,7 @@ func main() {
 		// we could update the gateway proto to match for /api/v1 but
 		// it shouldn't care where it's mounted to, hence we just rewrite the path here
 		r.URL.Path = strings.Replace(r.URL.Path, "/api", "", -1)
-		log.Println("Here")
-		log.Println(r.URL.Path)
+		log.Println("cleaned_path=", r.URL.Path)
 		mux.ServeHTTP(w, r)
 	})
 

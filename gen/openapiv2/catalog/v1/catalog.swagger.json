@@ -95,7 +95,51 @@
         ]
       }
     },
-    "/v1/companies/{name}": {
+    "/v1/{company.name=companies/*}": {
+      "patch": {
+        "operationId": "CatalogService_UpdateCompany",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1Company"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "company.name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1Company"
+            }
+          },
+          {
+            "name": "updateMask",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CatalogService"
+        ]
+      }
+    },
+    "/v1/{name=companies/*}": {
       "get": {
         "operationId": "CatalogService_GetCompany",
         "responses": {
@@ -159,15 +203,12 @@
       "properties": {
         "name": {
           "type": "string",
-          "required": [
-            "name"
-          ]
+          "readOnly": true
         },
         "uid": {
           "type": "string",
-          "required": [
-            "uid"
-          ]
+          "title": "shoud uid be unique - in google's apis they don't\nspecify IMMUTABLE",
+          "readOnly": true
         },
         "displayName": {
           "type": "string"
@@ -182,11 +223,7 @@
           "format": "date-time",
           "readOnly": true
         }
-      },
-      "required": [
-        "name",
-        "uid"
-      ]
+      }
     },
     "v1ListCompaniesResponse": {
       "type": "object",

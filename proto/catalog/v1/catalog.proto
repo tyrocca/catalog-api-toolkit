@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
 import "google/api/client.proto";
+import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 
@@ -13,13 +14,17 @@ import "validate/validate.proto";
 package catalog.v1;
 
 message Company {
+    option (google.api.resource) = {
+        type: "catalog-api-toolkit.apis.com/Company"
+        pattern: "companies/{company}"
+    };
     string name = 1 [
-      (google.api.field_behavior) = REQUIRED,
-      (google.api.field_behavior) = IMMUTABLE
+        (google.api.field_behavior) = OUTPUT_ONLY,
     ];
+    // shoud uid be unique - in google's apis they don't
+    // specify IMMUTABLE
     string uid = 2 [
-        (google.api.field_behavior) = REQUIRED,
-        (google.api.field_behavior) = IMMUTABLE
+        (google.api.field_behavior) = OUTPUT_ONLY
     ];
     string display_name = 3 [
         (validate.rules).string = {min_bytes: 1, max_bytes: 256, }
@@ -41,10 +46,6 @@ message CreateCompanyRequest {
 message GetCompanyRequest {
     string name = 1 [
         (google.api.field_behavior) = REQUIRED
-        // not sure if this is okay: https://github.com/googleapis/googleapis/blob/master/google/api/resource.proto
-        // This: https://google.aip.dev/123
-        // TODO (tyrocca 2022-04-04): I think the goal would be to have
-        // a repo of all these types..?
     ];
 }
 
@@ -58,6 +59,11 @@ message ListCompaniesRequest {
 message ListCompaniesResponse {
     repeated Company companies = 1;
     string next_page_token = 2;
+}
+
+message UpdateCompanyRequest {
+    Company company = 1 [(google.api.field_behavior) = REQUIRED];
+    google.protobuf.FieldMask update_mask = 2;
 }
 
 
@@ -117,7 +123,7 @@ service CatalogService {
     }
     rpc GetCompany(GetCompanyRequest) returns (Company) {
         option (google.api.http) = {
-            get: "/v1/companies/{name}"
+            get: "/v1/{name=companies/*}"
         };
         option (google.api.method_signature) = "name";
     }
@@ -127,5 +133,12 @@ service CatalogService {
         };
         // no type for these since top level
         option (google.api.method_signature) = "";
+    }
+    rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {
+        option (google.api.http) = {
+            patch: "/v1/{company.name=companies/*}"
+            body: "company"
+        };
+        option (google.api.method_signature) = "company,update_mask";
     }
 }
