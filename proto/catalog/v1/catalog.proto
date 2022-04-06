@@ -19,7 +19,7 @@ message Company {
         pattern: "companies/{company}"
     };
     string name = 1 [
-        (google.api.field_behavior) = OUTPUT_ONLY,
+        (google.api.field_behavior) = OUTPUT_ONLY
     ];
     // shoud uid be unique - in google's apis they don't
     // specify IMMUTABLE
