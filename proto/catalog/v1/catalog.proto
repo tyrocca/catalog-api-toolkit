@@ -2,15 +2,11 @@ syntax = "proto3";
 
 option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
 
-import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/api/resource.proto";
-import "google/api/client.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
-// local
-import "catalog/v1/company.proto";
 
 package catalog.v1;
 
@@ -80,8 +76,6 @@ message UpdateCatalogRequest {
 
 message DeleteCatalogRequest {
   string name = 1 [ (google.api.field_behavior) = REQUIRED ];
-  // https://google.aip.dev/135 - cascade delete
-  // must fail if not provided
   bool force = 2;
 }
 

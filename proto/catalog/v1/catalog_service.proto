@@ -3,12 +3,8 @@ syntax = "proto3";
 option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
 
 import "google/api/annotations.proto";
-import "google/api/field_behavior.proto";
-import "google/api/resource.proto";
 import "google/api/client.proto";
-import "google/protobuf/field_mask.proto";
-import "google/protobuf/timestamp.proto";
-import "validate/validate.proto";
+import "google/protobuf/empty.proto";
 
 // local
 import "catalog/v1/company.proto";
@@ -43,10 +39,42 @@ service CatalogService {
     };
     option (google.api.method_signature) = "company,update_mask";
   }
-  rpc DeleteCompany(DeleteCompanyRequest) returns (Company) {
+  rpc DeleteCompany(DeleteCompanyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      patch : "/v1/{company.name=companies/*}"
-      body : "company"
+      patch : "/v1/{name=companies/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  // Catalog CRUD
+  rpc CreateCatalog(CreateCatalogRequest) returns (Catalog) {
+    option (google.api.http) = {
+      post : "/v1/{parent=companies/*}/catalogs"
+      body : "catalog"
+    };
+    option (google.api.method_signature) = "parent,catalog";
+  }
+  rpc GetCatalog(GetCatalogRequest) returns (Catalog) {
+    option (google.api.http) = {
+      get : "/v1/{name=companies/*/catalogs/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  rpc ListCatalogs(ListCatalogsRequest) returns (ListCatalogsResponse) {
+    option (google.api.http) = {
+      get : "/v1/{parent=companies/*}/catalogs"
+    };
+    option (google.api.method_signature) = "parent";
+  }
+  rpc UpdateCatalog(UpdateCatalogRequest) returns (Catalog) {
+    option (google.api.http) = {
+      patch : "/v1/{catalog.name=companies/*/catalogs/*}"
+      body : "catalog"
+    };
+    option (google.api.method_signature) = "catalog,update_mask";
+  }
+  rpc DeleteCatalog(DeleteCatalogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      patch : "/v1/{name=companies/*/catalogs/*}"
     };
     option (google.api.method_signature) = "name";
   }

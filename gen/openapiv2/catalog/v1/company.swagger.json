@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "catalog/v1/catalog.proto",
+    "title": "catalog/v1/company.proto",
     "version": "version not set"
   },
   "consumes": [
