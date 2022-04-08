@@ -9,77 +9,81 @@ import "google/api/client.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
-
+// local
+import "catalog/v1/company.proto";
 
 package catalog.v1;
 
-message Company {
-    option (google.api.resource) = {
-        type: "catalog-api-toolkit.apis.com/Company"
-        pattern: "companies/{company}"
-    };
-    string name = 1 [
-        (google.api.field_behavior) = OUTPUT_ONLY
-    ];
-    // shoud uid be unique - in google's apis they don't
-    // specify IMMUTABLE
-    string uid = 2 [
-        (google.api.field_behavior) = OUTPUT_ONLY
-    ];
-    string display_name = 3 [
-        (validate.rules).string = {min_bytes: 1, max_bytes: 256, }
-    ];
-    google.protobuf.Timestamp create_time = 4 [
-        (google.api.field_behavior) = IMMUTABLE,
-        (google.api.field_behavior) = OUTPUT_ONLY
-    ];
-    google.protobuf.Timestamp update_time = 5 [
-        (google.api.field_behavior) = IMMUTABLE,
-        (google.api.field_behavior) = OUTPUT_ONLY
-    ];
+// Catalog Stuff
+message Catalog {
+  option (google.api.resource) = {
+    type : "catalog-api-toolkit.apis.com/Catalog"
+    pattern : "companies/{company}/catalogs/{catalog}"
+  };
+  string name = 1 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string uid = 2 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string display_name = 3 [ (validate.rules).string = {
+    min_bytes : 1,
+    max_bytes : 256,
+  } ];
+  google.protobuf.Timestamp create_time = 4 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+  google.protobuf.Timestamp update_time = 5 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
 }
 
-message CreateCompanyRequest {
-    Company company = 1 [(google.api.field_behavior) = REQUIRED];
+message CreateCatalogRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
+  Catalog catalog = 2 [ (google.api.field_behavior) = REQUIRED ];
 }
 
-message GetCompanyRequest {
-    string name = 1 [
-        (google.api.field_behavior) = REQUIRED
-    ];
+message GetCatalogRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
 }
 
-message ListCompaniesRequest {
-    int32 page_size = 2;
-    string page_token = 3;
-    string filter = 4;
-    string order_by = 5;
+message ListCatalogsRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string order_by = 5;
 }
 
-message ListCompaniesResponse {
-    repeated Company companies = 1;
-    string next_page_token = 2;
+message ListCatalogsResponse {
+  repeated Catalog catalogs = 1;
+  string next_page_token = 2;
 }
 
-message UpdateCompanyRequest {
-    Company company = 1 [(google.api.field_behavior) = REQUIRED];
-    google.protobuf.FieldMask update_mask = 2;
+message UpdateCatalogRequest {
+  Catalog catalog = 1 [ (google.api.field_behavior) = REQUIRED ];
+  google.protobuf.FieldMask update_mask = 2;
 }
 
-
-/* // Catalog Stuff */
-/* message CreateCatalogRequest { */
-/*     string name = 1; */
-/*     string parent = 2; */
-/* } */
-
-/* message Catalog { */
-/*     string name = 1; */
-/*     string uid = 2; */
-/*     string display_name = 3; */
-/*     google.protobuf.Timestamp create_time = 4; */
-/*     google.protobuf.Timestamp update_time = 5; */
-/* } */
+message DeleteCatalogRequest {
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  // https://google.aip.dev/135 - cascade delete
+  // must fail if not provided
+  bool force = 2;
+}
 
 /* // */
 /* message CreateCatalogItemRequest { */
@@ -111,34 +115,3 @@ message UpdateCompanyRequest {
 /*     google.protobuf.Timestamp create_time = 11; */
 /*     google.protobuf.Timestamp update_time = 12; */
 /* } */
-
-
-service CatalogService {
-    rpc CreateCompany(CreateCompanyRequest) returns (Company) {
-        option (google.api.http) = {
-            post: "/v1/companies"
-            body: "company"
-        };
-        option (google.api.method_signature) = "company";
-    }
-    rpc GetCompany(GetCompanyRequest) returns (Company) {
-        option (google.api.http) = {
-            get: "/v1/{name=companies/*}"
-        };
-        option (google.api.method_signature) = "name";
-    }
-    rpc ListCompanies(ListCompaniesRequest) returns (ListCompaniesResponse) {
-        option (google.api.http) = {
-            get: "/v1/companies"
-        };
-        // no type for these since top level
-        option (google.api.method_signature) = "";
-    }
-    rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {
-        option (google.api.http) = {
-            patch: "/v1/{company.name=companies/*}"
-            body: "company"
-        };
-        option (google.api.method_signature) = "company,update_mask";
-    }
-}

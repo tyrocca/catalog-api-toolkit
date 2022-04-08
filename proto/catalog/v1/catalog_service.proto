@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/api/client.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// local
+import "catalog/v1/company.proto";
+import "catalog/v1/catalog.proto";
+
+package catalog.v1;
+service CatalogService {
+  rpc CreateCompany(CreateCompanyRequest) returns (Company) {
+    option (google.api.http) = {
+      post : "/v1/companies"
+      body : "company"
+    };
+    option (google.api.method_signature) = "company";
+  }
+  rpc GetCompany(GetCompanyRequest) returns (Company) {
+    option (google.api.http) = {
+      get : "/v1/{name=companies/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  rpc ListCompanies(ListCompaniesRequest) returns (ListCompaniesResponse) {
+    option (google.api.http) = {
+      get : "/v1/companies"
+    };
+    // no type for these since top level
+    option (google.api.method_signature) = "";
+  }
+  rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {
+    option (google.api.http) = {
+      patch : "/v1/{company.name=companies/*}"
+      body : "company"
+    };
+    option (google.api.method_signature) = "company,update_mask";
+  }
+  rpc DeleteCompany(DeleteCompanyRequest) returns (Company) {
+    option (google.api.http) = {
+      patch : "/v1/{company.name=companies/*}"
+      body : "company"
+    };
+    option (google.api.method_signature) = "name";
+  }
+}
