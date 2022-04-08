@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+package catalog.v1;
+
+// Catalog Stuff
+message Catalog {
+  option (google.api.resource) = {
+    type : "catalog-api-toolkit.apis.com/Catalog"
+    pattern : "companies/{company}/catalogs/{catalog}"
+  };
+  string name = 1 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string uid = 2 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string display_name = 3 [ (validate.rules).string = {
+    min_bytes : 1,
+    max_bytes : 256,
+  } ];
+  google.protobuf.Timestamp create_time = 4 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+  google.protobuf.Timestamp update_time = 5 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+}
+
+message CreateCatalogRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
+  Catalog catalog = 2 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+message GetCatalogRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
+}
+
+message ListCatalogsRequest {
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
+  int32 page_size = 2;
+  string page_token = 3;
+  string filter = 4;
+  string order_by = 5;
+}
+
+message ListCatalogsResponse {
+  repeated Catalog catalogs = 1;
+  string next_page_token = 2;
+}
+
+message UpdateCatalogRequest {
+  Catalog catalog = 1 [ (google.api.field_behavior) = REQUIRED ];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message DeleteCatalogRequest {
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  bool force = 2;
+}
+
+/* // */
+/* message CreateCatalogItemRequest { */
+/*     // Refers to the catalog */
+/*     string parent = 1; */
+/*     string name = 2; */
+/*     string company_id = 3; */
+/*     string external_id = 4; */
+/*     string description = 5; */
+/*     string url = 6; */
+/*     string image_full_url = 7; */
+/*     string image_thumbnail_url = 8; */
+/*     google.protobuf.Timestamp published_time = 9; */
+/*     google.protobuf.Timestamp create_time = 10; */
+/*     google.protobuf.Timestamp update_time = 11; */
+/* }; */
+
+/* message CatalogItem { */
+/*     string uid = 1; */
+/*     string parent = 2; */
+/*     string name = 3; */
+/*     string company_id = 4; */
+/*     string external_id = 5; */
+/*     string description = 6; */
+/*     string url = 7; */
+/*     string image_full_url = 8; */
+/*     string image_thumbnail_url = 9; */
+/*     google.protobuf.Timestamp published_time = 10; */
+/*     google.protobuf.Timestamp create_time = 11; */
+/*     google.protobuf.Timestamp update_time = 12; */
+/* } */

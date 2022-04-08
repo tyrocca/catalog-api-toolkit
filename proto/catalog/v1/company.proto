@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "github.com/tyrocca/catalog-api-toolkit/proto/catalog/v1";
+
+import "google/api/field_behavior.proto";
+import "google/api/resource.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+package catalog.v1;
+
+// Root object is a company
+message Company {
+  option (google.api.resource) = {
+    type : "catalog-api-toolkit.apis.com/Company"
+    pattern : "companies/{company}"
+  };
+  string name = 1 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  // shoud uid be unique - in google's apis they don't
+  // specify IMMUTABLE
+  string uid = 2 [ (google.api.field_behavior) = OUTPUT_ONLY ];
+  string display_name = 3 [ (validate.rules).string = {
+    min_bytes : 1,
+    max_bytes : 256,
+  } ];
+  google.protobuf.Timestamp create_time = 4 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+  google.protobuf.Timestamp update_time = 5 [
+    (google.api.field_behavior) = IMMUTABLE,
+    (google.api.field_behavior) = OUTPUT_ONLY
+  ];
+}
+
+message CreateCompanyRequest {
+  Company company = 1 [ (google.api.field_behavior) = REQUIRED ];
+}
+
+message GetCompanyRequest {
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type : "catalog-api-toolkit.apis.com/Company"
+    }
+  ];
+}
+
+message ListCompaniesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  string order_by = 4;
+}
+
+message ListCompaniesResponse {
+  repeated Company companies = 1;
+  string next_page_token = 2;
+}
+
+message UpdateCompanyRequest {
+  Company company = 1 [ (google.api.field_behavior) = REQUIRED ];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message DeleteCompanyRequest {
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  // https://google.aip.dev/135 - cascade delete
+  // must fail if not provided
+  bool force = 2;
+}
