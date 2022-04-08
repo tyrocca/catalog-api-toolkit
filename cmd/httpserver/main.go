@@ -54,7 +54,14 @@ func main() {
 			}
 			return metadata.New(md)
 		}),
-		runtime.WithErrorHandler(func(ctx context.Context, mux *runtime.ServeMux, marshaler runtime.Marshaler, writer http.ResponseWriter, request *http.Request, err error) {
+		runtime.WithErrorHandler(func(
+			ctx context.Context,
+			mux *runtime.ServeMux,
+			marshaler runtime.Marshaler,
+			writer http.ResponseWriter,
+			request *http.Request,
+			err error,
+		) {
 			//creating a new HTTTPStatusError with a custom status, and passing error
 			newError := runtime.HTTPStatusError{
 				HTTPStatus: 400,
@@ -64,7 +71,12 @@ func main() {
 			runtime.DefaultHTTPErrorHandler(ctx, mux, marshaler, writer, request, &newError)
 		}))
 	// setting up a dail up for gRPC service by specifying endpoint/target url
-	err := gen.RegisterCatalogServiceHandlerFromEndpoint(context.Background(), mux, GRPC_ENDPOINT, []grpc.DialOption{grpc.WithInsecure()})
+	err := gen.RegisterCatalogServiceHandlerFromEndpoint(
+		context.Background(),
+		mux,
+		GRPC_ENDPOINT,
+		[]grpc.DialOption{grpc.WithInsecure()},
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
