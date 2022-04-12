@@ -41,7 +41,7 @@ service CatalogService {
   }
   rpc DeleteCompany(DeleteCompanyRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      patch : "/v1/{name=companies/*}"
+      delete : "/v1/{name=companies/*}"
     };
     option (google.api.method_signature) = "name";
   }
@@ -74,7 +74,7 @@ service CatalogService {
   }
   rpc DeleteCatalog(DeleteCatalogRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      patch : "/v1/{name=companies/*/catalogs/*}"
+      delete : "/v1/{name=companies/*/catalogs/*}"
     };
     option (google.api.method_signature) = "name";
   }

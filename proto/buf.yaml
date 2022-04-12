@@ -3,6 +3,16 @@ deps:
   - buf.build/googleapis/googleapis
   - buf.build/grpc-ecosystem/grpc-gateway
   - buf.build/envoyproxy/protoc-gen-validate
+build:
+  excludes: [google, validate]
+lint:
+  use:
+    - DEFAULT
+  ignore:
+    # vendor deps
+    - google/
+    - validate/
+  rpc_allow_google_protobuf_empty_responses: true
 # lint:
 #   use:
 #     - DEFAULT

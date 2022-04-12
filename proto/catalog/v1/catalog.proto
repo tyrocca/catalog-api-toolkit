@@ -75,7 +75,11 @@ message UpdateCatalogRequest {
 }
 
 message DeleteCatalogRequest {
-  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  string name = 1 [ (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      child_type : "catalog-api-toolkit.apis.com/Catalog"
+    }
+  ];
   bool force = 2;
 }
 

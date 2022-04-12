@@ -17,8 +17,7 @@ message Company {
     pattern : "companies/{company}"
   };
   string name = 1 [ (google.api.field_behavior) = OUTPUT_ONLY ];
-  // shoud uid be unique - in google's apis they don't
-  // specify IMMUTABLE
+  // shoud uid be unique - in google's apis they don't specify immutability
   string uid = 2 [ (google.api.field_behavior) = OUTPUT_ONLY ];
   string display_name = 3 [ (validate.rules).string = {
     min_bytes : 1,
@@ -65,7 +64,12 @@ message UpdateCompanyRequest {
 }
 
 message DeleteCompanyRequest {
-  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (google.api.resource_reference) = {
+      type : "catalog-api-toolkit.apis.com/Company"
+    }
+  ];
   // https://google.aip.dev/135 - cascade delete
   // must fail if not provided
   bool force = 2;

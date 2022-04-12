@@ -23,3 +23,8 @@ plugins:
     opt:
       - paths=source_relative
       - lang=go
+  # python
+  - remote: buf.build/protocolbuffers/plugins/python:v3.19.1-1
+    out: gen/python
+  - remote: buf.build/grpc/plugins/python:v1.41.1-1
+    out: gen/python

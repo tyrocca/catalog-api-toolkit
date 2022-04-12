@@ -212,7 +212,7 @@
           "CatalogService"
         ]
       },
-      "patch": {
+      "delete": {
         "operationId": "CatalogService_DeleteCatalog",
         "responses": {
           "200": {
@@ -234,6 +234,12 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "force",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": [
@@ -270,7 +276,7 @@
           "CatalogService"
         ]
       },
-      "patch": {
+      "delete": {
         "operationId": "CatalogService_DeleteCompany",
         "responses": {
           "200": {
@@ -292,6 +298,13 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "force",
+            "description": "https://google.aip.dev/135 - cascade delete\nmust fail if not provided.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": [
@@ -456,7 +469,7 @@
         },
         "uid": {
           "type": "string",
-          "title": "shoud uid be unique - in google's apis they don't\nspecify IMMUTABLE",
+          "title": "shoud uid be unique - in google's apis they don't specify immutability",
           "readOnly": true
         },
         "displayName": {
