@@ -8,7 +8,8 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
 class CatalogServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """Company Methods 
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -69,16 +70,19 @@ class CatalogServiceStub(object):
 
 
 class CatalogServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """Company Methods 
+    """
 
     def CreateCompany(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Given a company creates a company
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetCompany(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Fetc
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -102,7 +106,7 @@ class CatalogServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def CreateCatalog(self, request, context):
-        """Catalog CRUD
+        """Creates a catalog
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -193,7 +197,8 @@ def add_CatalogServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class CatalogService(object):
-    """Missing associated documentation comment in .proto file."""
+    """Company Methods 
+    """
 
     @staticmethod
     def CreateCompany(request,

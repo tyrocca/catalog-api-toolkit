@@ -19,12 +19,14 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CatalogServiceClient interface {
+	// Given a company creates a company
 	CreateCompany(ctx context.Context, in *CreateCompanyRequest, opts ...grpc.CallOption) (*Company, error)
+	// Fetc
 	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 	ListCompanies(ctx context.Context, in *ListCompaniesRequest, opts ...grpc.CallOption) (*ListCompaniesResponse, error)
 	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*Company, error)
 	DeleteCompany(ctx context.Context, in *DeleteCompanyRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Catalog CRUD
+	// Creates a catalog
 	CreateCatalog(ctx context.Context, in *CreateCatalogRequest, opts ...grpc.CallOption) (*Catalog, error)
 	GetCatalog(ctx context.Context, in *GetCatalogRequest, opts ...grpc.CallOption) (*Catalog, error)
 	ListCatalogs(ctx context.Context, in *ListCatalogsRequest, opts ...grpc.CallOption) (*ListCatalogsResponse, error)
@@ -134,12 +136,14 @@ func (c *catalogServiceClient) DeleteCatalog(ctx context.Context, in *DeleteCata
 // All implementations must embed UnimplementedCatalogServiceServer
 // for forward compatibility
 type CatalogServiceServer interface {
+	// Given a company creates a company
 	CreateCompany(context.Context, *CreateCompanyRequest) (*Company, error)
+	// Fetc
 	GetCompany(context.Context, *GetCompanyRequest) (*Company, error)
 	ListCompanies(context.Context, *ListCompaniesRequest) (*ListCompaniesResponse, error)
 	UpdateCompany(context.Context, *UpdateCompanyRequest) (*Company, error)
 	DeleteCompany(context.Context, *DeleteCompanyRequest) (*emptypb.Empty, error)
-	// Catalog CRUD
+	// Creates a catalog
 	CreateCatalog(context.Context, *CreateCatalogRequest) (*Catalog, error)
 	GetCatalog(context.Context, *GetCatalogRequest) (*Catalog, error)
 	ListCatalogs(context.Context, *ListCatalogsRequest) (*ListCatalogsResponse, error)

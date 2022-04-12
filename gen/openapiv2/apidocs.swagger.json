@@ -65,6 +65,7 @@
         ]
       },
       "post": {
+        "summary": "Given a company creates a company",
         "operationId": "CatalogService_CreateCompany",
         "responses": {
           "200": {
@@ -249,6 +250,7 @@
     },
     "/v1/{name=companies/*}": {
       "get": {
+        "summary": "Fetc",
         "operationId": "CatalogService_GetCompany",
         "responses": {
           "200": {
@@ -367,7 +369,7 @@
         ]
       },
       "post": {
-        "summary": "Catalog CRUD",
+        "summary": "Creates a catalog",
         "operationId": "CatalogService_CreateCatalog",
         "responses": {
           "200": {

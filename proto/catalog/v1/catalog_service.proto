@@ -12,6 +12,8 @@ import "catalog/v1/catalog.proto";
 
 package catalog.v1;
 service CatalogService {
+  /* Company Methods */
+  // Given a company creates a company
   rpc CreateCompany(CreateCompanyRequest) returns (Company) {
     option (google.api.http) = {
       post : "/v1/companies"
@@ -19,6 +21,7 @@ service CatalogService {
     };
     option (google.api.method_signature) = "company";
   }
+  // Fetc
   rpc GetCompany(GetCompanyRequest) returns (Company) {
     option (google.api.http) = {
       get : "/v1/{name=companies/*}"
@@ -45,7 +48,8 @@ service CatalogService {
     };
     option (google.api.method_signature) = "name";
   }
-  // Catalog CRUD
+  /* Catalog Methods */
+  // Creates a catalog
   rpc CreateCatalog(CreateCatalogRequest) returns (Catalog) {
     option (google.api.http) = {
       post : "/v1/{parent=companies/*}/catalogs"
