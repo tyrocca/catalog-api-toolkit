@@ -2,7 +2,7 @@ package entities
 
 import "time"
 
-type Item struct {
+type Variant struct {
 	ID                int
 	Title             string
 	Description       string
