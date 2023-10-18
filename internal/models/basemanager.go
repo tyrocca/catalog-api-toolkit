@@ -40,6 +40,7 @@ type TableManager interface {
 	BuildCreateStatment(db *sql.DB) (*sql.Stmt, error)
 	BuildUpdateStatement(db *sql.DB) (*sql.Stmt, error)
 	BuildFilterStatement(db *sql.DB) (*sql.Stmt, error)
+	BuildDeleteStatement(db *sql.DB) (*sql.Stmt, error)
 }
 
 /*
@@ -55,25 +56,25 @@ func buildQuestionArray(num int) string {
 	return qStr
 }
 
-func buildSetClause(cols *TableColumns) string {
+func buildSetClause(cols TableColumns) string {
 	outstr := ""
-	for _, col := range *cols {
+	for _, col := range cols {
 		outstr = fmt.Sprintf("%s%s=?,", outstr, col)
 	}
 	return outstr
 }
 
-func buildANDClause(cols *TableColumns) string {
+func buildANDClause(cols TableColumns) string {
 	var filterArray []string
-	for i, col := range *cols {
+	for i, col := range cols {
 		filterArray[i] = fmt.Sprintf("%s=?", col)
 	}
 	return "(" + strings.Join(filterArray, " AND ") + ")"
 }
 
-func buildOrderByClause(cols *TableColumns) string {
-	if cols != nil && len(*cols) > 0 {
-		joined := strings.Join(*cols, ", ")
+func buildOrderByClause(cols TableColumns) string {
+	if cols != nil && len(cols) > 0 {
+		joined := strings.Join(cols, ", ")
 		return fmt.Sprintf(" ORDER BY (%s)", joined)
 	}
 	return ""
@@ -99,8 +100,8 @@ func (t *Table) columnExists(col string) bool {
 	return false
 }
 
-func (t *Table) validColumns(cols *TableColumns) bool {
-	for _, col := range *cols {
+func (t *Table) validColumns(cols TableColumns) bool {
+	for _, col := range cols {
 		if !t.columnExists(col) {
 			return false
 		}
@@ -130,8 +131,8 @@ func (t *Table) BuildCreateStatment(db *sql.DB) (*sql.Stmt, error) {
 
 func (t *Table) BuildUpdateStatement(
 	db *sql.DB,
-	filterCols *TableColumns,
-	updateCols *TableColumns,
+	filterCols TableColumns,
+	updateCols TableColumns,
 ) (*sql.Stmt, error) {
 
 	// TODO (tyrocca 2022-03-28): handle invalid column
@@ -154,9 +155,9 @@ func (t *Table) BuildUpdateStatement(
 
 func (t *Table) BuildFilterStatement(
 	db *sql.DB,
-	filterCols *TableColumns,
-	selectCols *TableColumns,
-	orderByCols *TableColumns,
+	filterCols TableColumns,
+	selectCols TableColumns,
+	orderByCols TableColumns,
 	limit int,
 ) (*sql.Stmt, error) {
 
@@ -165,7 +166,7 @@ func (t *Table) BuildFilterStatement(
 	t.validColumns(selectCols)
 	t.validColumns(orderByCols)
 
-	selectString := strings.Join(*selectCols, ", ")
+	selectString := strings.Join(selectCols, ", ")
 	filterString := buildANDClause(filterCols)
 
 	// Additional params
@@ -174,6 +175,26 @@ func (t *Table) BuildFilterStatement(
 
 	queryString := fmt.Sprintf("SELECT %s FROM %s WHERE %s%s%s",
 		selectString, t.Name, filterString, orderByClause, limitClause,
+	)
+	return db.Prepare(queryString)
+}
+
+/*
+ * Delete Helpers
+ */
+
+func (t *Table) BuildDeleteStatement(
+	db *sql.DB,
+	filterCols TableColumns,
+) (*sql.Stmt, error) {
+
+	// TODO (tyrocca 2022-03-28): error handle
+	t.validColumns(filterCols)
+
+	filterString := buildANDClause(filterCols)
+
+	queryString := fmt.Sprintf("DELETE FROM %s WHERE %s",
+		t.Name, filterString,
 	)
 	return db.Prepare(queryString)
 }

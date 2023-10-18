@@ -83,6 +83,10 @@ message DeleteCatalogRequest {
   bool force = 2;
 }
 
+message CreateCompanyRequest {
+  string name = 1 [ (google.api.field_behavior) = REQUIRED ];
+}
+
 /* // */
 /* message CreateCatalogItemRequest { */
 /*     // Refers to the catalog */
